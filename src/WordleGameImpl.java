@@ -13,17 +13,30 @@ public class WordleGameImpl implements WordleGame {
     private int maxAttempts = 5;
     private int validAttempts = 0;
     private int attempts = 0;
-    private Boolean gameEnded = false;
+    private boolean gameEnded = false;
+    private String wordOfTheDay;
+    private WordsDictionary wordsDictionary;
+    private EnumCharValidationState[] validationResults;
 
 
     // contexte par défaut, input par la console
     public WordleGameImpl() {
-        reader = new BufferedReader(new InputStreamReader(System.in));
+        this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl());
     }
 
     // contexte de test, injection d'un BufferedReader mocké
-    public WordleGameImpl(BufferedReader bufferedReader) {
-        this.reader = bufferedReader;
+    public WordleGameImpl(BufferedReader reader) {
+        this(reader, new WordsDictionaryImpl());
+    }
+
+    public WordleGameImpl(WordsDictionary wordsDictionary) {
+        this(new BufferedReader(new InputStreamReader(System.in)), wordsDictionary);
+    }
+
+    public WordleGameImpl(BufferedReader reader, WordsDictionary wordsDictionary) {
+        this.reader = reader;
+        this.wordsDictionary = wordsDictionary;
+        this.wordOfTheDay = wordsDictionary.getWordOfTheDay();
     }
 
     public void start() {
@@ -56,6 +69,11 @@ public class WordleGameImpl implements WordleGame {
 
             // TODO: check word against dictionary here
             System.out.println("Your guess is: " + userGuess);
+
+            validationResults = WordValidator.getValidationResults(wordOfTheDay, userGuess);
+            for (EnumCharValidationState result : validationResults) {
+                System.out.print(result.getSymbol());
+            }
         }
     }
 
