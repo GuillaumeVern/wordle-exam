@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 public class WordleGame {
     private String userGuess;
     private BufferedReader reader;
+    private int maxAttempts = 5;
+    private int attempts = 0;
+    private Boolean gameEnded = false;
 
 
     // contexte par défaut, input par la console
@@ -16,16 +19,20 @@ public class WordleGame {
         reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    // contexte de test, input par un BufferedReader mocké
+    // contexte de test, injection d'un BufferedReader mocké
     public WordleGame(BufferedReader bufferedReader) {
         this.reader = bufferedReader;
     }
 
     public void start() {
         System.out.println("Welcome to Wordle!");
-        System.out.println("Enter your guess:");
-        setUserGuess(userGuessInput());
-        System.out.println("Your guess is: " + userGuess);
+        updateGameEnded();
+        while (!gameEnded) {
+            playTurn();
+            attempts++;
+            updateGameEnded();
+        }
+        System.out.println("Game ended.");
     }
 
     public String userGuessInput() {
@@ -37,5 +44,17 @@ public class WordleGame {
             guess = "";
         }
         return guess;
+    }
+
+    private void playTurn() {
+        System.out.println("Enter your guess:");
+        setUserGuess(userGuessInput());
+        System.out.println("Your guess is: " + userGuess);
+    }
+
+    private void updateGameEnded() {
+        if (attempts >= maxAttempts) {
+            gameEnded = true;
+        }
     }
 }
