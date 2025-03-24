@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public class WordValidatorTest {
 
@@ -50,6 +51,39 @@ public class WordValidatorTest {
     public void testWordNoSpacesEnd() {
         boolean result = WordValidator.isValid("hell ");
         assertFalse(result);
+    }
+
+    @Test
+    public void testExactMatchWord() {
+        EnumCharValidationState[] results = WordValidator.getValidationResults("hello", "hello");
+        EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
+                                            EnumCharValidationState.EXACT_MATCH,
+                                            EnumCharValidationState.EXACT_MATCH,
+                                            EnumCharValidationState.EXACT_MATCH,
+                                            EnumCharValidationState.EXACT_MATCH};
+        assertArrayEquals(expected, results);
+    }
+
+    @Test
+    public void testExactMatchLetter() {
+        EnumCharValidationState[] results = WordValidator.getValidationResults("hello", "hffff");
+        EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
+                                            EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.NOT_IN_WORD};
+        assertArrayEquals(expected, results);
+    }
+
+    @Test
+    public void testMatchLetterInWord() {
+        EnumCharValidationState[] results = WordValidator.getValidationResults("hello", "ffffh");
+        EnumCharValidationState[] expected = {EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.NOT_IN_WORD,
+                                            EnumCharValidationState.IN_WORD};
+        assertArrayEquals(expected, results);
     }
 
 

@@ -38,12 +38,11 @@ public class WordleGameImpl implements WordleGame {
     }
 
     public String getUserInputFromConsole() {
-        String guess;
+        String guess = null;
         try {
             guess = reader.readLine();
         } catch (IOException e) {
             System.out.println("Error reading input");
-            guess = "";
         }
         return guess;
     }
@@ -54,6 +53,8 @@ public class WordleGameImpl implements WordleGame {
         if(checkUserGuessIsValid()) {
             // only increment attempts if the guess is valid
             validAttempts++;
+
+            // TODO: check word against dictionary here
             System.out.println("Your guess is: " + userGuess);
         }
     }

@@ -16,6 +16,24 @@ public interface WordValidator {
         return valid;
     }
 
+    static EnumCharValidationState[] getValidationResults(String word, String guess) {
+        EnumCharValidationState[] results = new EnumCharValidationState[word.length()];
+        char[] wordCharArray = word.toCharArray();
+        char[] guessCharArray = guess.toCharArray();
+
+        for (int i = 0; i < wordCharArray.length; i++) {
+            if (wordCharArray[i] == guessCharArray[i]) {
+                results[i] = EnumCharValidationState.EXACT_MATCH;
+            } else if (word.contains(String.valueOf(guessCharArray[i]))) {
+                results[i] = EnumCharValidationState.IN_WORD;
+            } else {
+                results[i] = EnumCharValidationState.NOT_IN_WORD;
+            }
+        }
+
+        return results;
+    }
+
     private static boolean isNotNull(String word) {
         boolean valid = true;
         if (word == null) {

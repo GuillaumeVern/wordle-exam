@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class WordleGameTest {
@@ -23,6 +24,12 @@ public class WordleGameTest {
     }
 
     @Test
+    public void testBufferReaderOnDefaultConstructor() {
+        wordleGame = new WordleGameImpl();
+        assertNotNull(wordleGame.getReader());
+    }
+
+    @Test
     public void testUserGuess() {
         assertEquals("valid", wordleGame.getUserGuess());
     }
@@ -35,6 +42,12 @@ public class WordleGameTest {
         String guess = wordleGame.getUserInputFromConsole();
 
         assertEquals("valid", guess);
+    }
+
+    @Test
+    public void testValidGame() {
+        wordleGame.start();
+        assertEquals(5, wordleGame.getValidAttempts());
     }
 
     @Test
