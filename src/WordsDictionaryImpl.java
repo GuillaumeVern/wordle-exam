@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class WordsDictionaryImpl implements WordsDictionary {
     private ArrayList<String> listLa;
@@ -18,10 +19,27 @@ public class WordsDictionaryImpl implements WordsDictionary {
     }
 
     public String getWordOfTheDay() {
-        return "hello";
+        Random random = new Random();
+        int randomNumber = random.nextInt(listLa.size());
+        return listLa.get(randomNumber);
     }
 
     public boolean checkUserInputWordIsValid(String word) {
-        return true;
+        boolean valid = false;
+        for (String s : listLa) {
+            if (s.equals(word)) {
+                valid = true;
+                break;
+            }
+        }
+        if (!valid) {
+            for (String s : listTa) {
+                if (s.equals(word)) {
+                    valid = true;
+                    break;
+                }
+            }
+        }
+        return valid;
     }
 }
