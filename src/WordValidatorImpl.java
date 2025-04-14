@@ -49,8 +49,7 @@ public class WordValidatorImpl implements WordValidator {
                 }
                 occurencesFound = 0;
                 for (int j = 0; j < wordAttempt.getValidationResults().length; j++) {
-                    if (wordAttempt.getValidationResults()[j] == EnumCharValidationState.EXACT_MATCH ||
-                            wordAttempt.getValidationResults()[j] == EnumCharValidationState.IN_WORD) {
+                    if (wordAttempt.getValidationResults()[j] == EnumCharValidationState.EXACT_MATCH) {
                         occurencesFound++;
                     }
                 }

@@ -126,5 +126,18 @@ public class WordValidatorTest {
         assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
     }
 
+    @Test
+    public void testMatchTwoIn() {
+        WordAttempt results = validator.getValidationResults("annex", "erase");
+        EnumCharValidationState[] expected = {EnumCharValidationState.IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.IN_WORD};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
+    }
+
 
 }
