@@ -3,4 +3,5 @@ public interface WordleGame {
     String getUserInputFromConsole();
 
     boolean isTurnEnded();
+    boolean isQuit();
 }

@@ -95,7 +95,7 @@ public class PrettyPrinterImpl implements PrettyPrinter {
                 statisticsTracker.getAverageAttempts(),
                 statisticsTracker.getWinsCount(),
                 statisticsTracker.getWinsStreak(),
-                statisticsTracker.getGamesPlayed() - 1
+                statisticsTracker.getGamesPlayed()
         );
     }
 

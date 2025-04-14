@@ -100,5 +100,31 @@ public class WordValidatorTest {
         assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
     }
 
+    @Test
+    public void testMatchOneExact() {
+        WordAttempt results = validator.getValidationResults("hello", "hfffh");
+        EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
+    }
+
+    @Test
+    public void testMatchTwoExact() {
+        WordAttempt results = validator.getValidationResults("hello", "hfofo");
+        EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.EXACT_MATCH};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
+    }
+
 
 }

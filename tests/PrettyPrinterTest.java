@@ -1,4 +1,5 @@
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -11,13 +12,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PrettyPrinterTest {
+    private ByteArrayOutputStream outContent;
+    PrettyPrinter prettyPrinter;
+
+    @BeforeEach
+    public void setUp() {
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        prettyPrinter = new PrettyPrinterImpl();
+    }
 
     @Test
     public void startGameTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
         prettyPrinter.startGame();
 
         String expected = """
@@ -34,10 +40,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void endGameWonTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
         prettyPrinter.endGameWon();
 
         String expected = """
@@ -52,10 +54,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void endGameLostTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
         prettyPrinter.endGameLost();
 
         String expected = """
@@ -70,10 +68,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void askForUserInputTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
         prettyPrinter.askForUserInput();
 
         String expected = """
@@ -86,9 +80,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void wordResultTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
         WordAttempt wordAttemptMock = mock(WordAttemptImpl.class);
 
         when(wordAttemptMock.toString()).thenReturn("valid");
@@ -103,9 +94,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void wordResultNullTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
 
         prettyPrinter.wordResult(null);
 
@@ -116,9 +104,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void allWordsResultTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
         WordAttempt wordAttemptMock = mock(WordAttemptImpl.class);
         when(wordAttemptMock.toString()).thenReturn("valid");
         ArrayList<WordAttempt> previousWordsResults = new ArrayList<>(List.of(wordAttemptMock, wordAttemptMock));
@@ -136,9 +121,6 @@ public class PrettyPrinterTest {
 
     @Test
     public void allWordsResultNullTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
 
         prettyPrinter.allWordsResult(null);
 
@@ -149,14 +131,72 @@ public class PrettyPrinterTest {
 
     @Test
     public void printErrorMessageTest() {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-        PrettyPrinter prettyPrinter = new PrettyPrinterImpl();
 
         prettyPrinter.printErrorMessage("expected");
 
         String expected = """
                 \u001B[31mexpected\u001B[0m
+                """;
+
+        assertEquals(expected, outContent.toString().replace("\r",""));
+    }
+
+    @Test
+    public void remainingAttemptsTest() {
+
+        prettyPrinter.remainingAttempts(3);
+
+        String expected = """
+                -------------------------
+                  Remaining attempts: 3
+                -------------------------
+                
+                """;
+
+        assertEquals(expected, outContent.toString().replace("\r",""));
+    }
+
+    @Test
+    public void previousAttemptsTest() {
+        WordAttempt wordAttemptMock = mock(WordAttemptImpl.class);
+        when(wordAttemptMock.toString()).thenReturn("valid");
+        ArrayList<WordAttempt> previousWordsResults = new ArrayList<>(List.of(wordAttemptMock, wordAttemptMock));
+
+        prettyPrinter.previousAttempts(previousWordsResults);
+
+        String expected = """
+                -------------------------
+                    Previous attempts
+                
+                        valid
+                        valid
+                
+                -------------------------
+                """;
+
+        assertEquals(expected, outContent.toString().replace("\r",""));
+    }
+
+    @Test
+    public void printStatisticsTest() {
+        GameStatisticsTracker gameStatisticsTrackerMock = mock(GameStatisticsTracker.class);
+        when(gameStatisticsTrackerMock.getTotalAttempts()).thenReturn(0);
+        when(gameStatisticsTrackerMock.getAverageAttempts()).thenReturn(0);
+        when(gameStatisticsTrackerMock.getWinsCount()).thenReturn(0);
+        when(gameStatisticsTrackerMock.getWinsStreak()).thenReturn(0);
+        when(gameStatisticsTrackerMock.getGamesPlayed()).thenReturn(0);
+
+        prettyPrinter.printStatistics(gameStatisticsTrackerMock);
+
+        String expected = """
+                -------------------------
+                     Session stats:
+                    Total attempts: 0
+                  Average attempts: 0
+                              Wins: 0
+                        Win streak: 0
+                      Games played: 0
+                -------------------------
                 """;
 
         assertEquals(expected, outContent.toString().replace("\r",""));
