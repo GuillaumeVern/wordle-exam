@@ -4,6 +4,7 @@ import lombok.Setter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 @Getter @Setter
 public class WordleGameImpl implements WordleGame {
@@ -14,40 +15,61 @@ public class WordleGameImpl implements WordleGame {
     private int validAttempts = 0;
     private int attempts = 0;
     private boolean gameEnded = false;
+    private boolean gameWon = false;
     private String wordOfTheDay;
     private WordsDictionary wordsDictionary;
-    private EnumCharValidationState[] validationResults;
+    private WordAttempt validationResults;
+    private ArrayList<WordAttempt> previousValidationsResults;
+    private PrettyPrinter prettyPrinter;
 
 
     // contexte par défaut, input par la console
     public WordleGameImpl() {
-        this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl());
+        this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl(), new PrettyPrinterImpl());
     }
 
     // contexte de test, injection d'un BufferedReader mocké
     public WordleGameImpl(BufferedReader reader) {
-        this(reader, new WordsDictionaryImpl());
+        this(reader, new WordsDictionaryImpl(), new PrettyPrinterImpl());
     }
 
     public WordleGameImpl(WordsDictionary wordsDictionary) {
-        this(new BufferedReader(new InputStreamReader(System.in)), wordsDictionary);
+        this(new BufferedReader(new InputStreamReader(System.in)), wordsDictionary, new PrettyPrinterImpl());
     }
 
-    public WordleGameImpl(BufferedReader reader, WordsDictionary wordsDictionary) {
+    public WordleGameImpl(PrettyPrinter prettyPrinter) {
+        this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl(), prettyPrinter);
+    }
+
+    public WordleGameImpl(BufferedReader reader, PrettyPrinter prettyPrinter) {
+        this(reader, new WordsDictionaryImpl(), prettyPrinter);
+    }
+
+    public WordleGameImpl(BufferedReader reader, WordsDictionary wordsDictionary, PrettyPrinter prettyPrinter) {
         this.reader = reader;
         this.wordsDictionary = wordsDictionary;
         this.wordOfTheDay = wordsDictionary.getWordOfTheDay();
+        this.prettyPrinter = prettyPrinter;
+        this.previousValidationsResults = new ArrayList<>();
     }
 
     public void start() {
-        System.out.println("Welcome to Wordle!");
-        updateGameEnded();
+        prettyPrinter.startGame();
+        checkGameEnded();
+
+
         while (!gameEnded) {
             playTurn();
             attempts++;
-            updateGameEnded();
+            checkGameEnded();
         }
-        System.out.println("Game ended.");
+
+
+        if (gameWon) {
+            prettyPrinter.endGameWon();
+        } else {
+            prettyPrinter.endGameLost();
+        }
     }
 
     public String getUserInputFromConsole() {
@@ -61,23 +83,32 @@ public class WordleGameImpl implements WordleGame {
     }
 
     private void playTurn() {
-        System.out.println("Enter your guess:");
+        prettyPrinter.askForUserInput();
         setUserGuess(getUserInputFromConsole());
+        prettyPrinter.clear();
         if(checkUserGuessIsValid()) {
             // only increment attempts if the guess is valid
             validAttempts++;
-
-            // TODO: check word against dictionary here
-            System.out.println("Your guess is: " + userGuess);
-
             validationResults = WordValidator.getValidationResults(wordOfTheDay, userGuess);
-            for (EnumCharValidationState result : validationResults) {
-                System.out.print(result.getSymbol());
-            }
+            System.out.println("previous attempts:");
+            prettyPrinter.allWordsResult(previousValidationsResults);
+            // TODO: remove wod display
+            System.out.println(wordOfTheDay);
+            prettyPrinter.wordResult(validationResults);
+            previousValidationsResults.add(validationResults);
+
+            checkGameWon();
         }
     }
 
-    private void updateGameEnded() {
+    private void checkGameWon() {
+        if (wordOfTheDay.equals(userGuess)) {
+            gameWon = true;
+            gameEnded = true;
+        }
+    }
+
+    private void checkGameEnded() {
         if (validAttempts >= maxAttempts || attempts >= hardLimitMaxAttempts) {
             gameEnded = true;
         }

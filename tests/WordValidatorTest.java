@@ -54,35 +54,41 @@ public class WordValidatorTest {
 
     @Test
     public void testExactMatchWord() {
-        EnumCharValidationState[] results = WordValidator.getValidationResults("hello", "hello");
+        WordAttempt results = WordValidator.getValidationResults("hello", "hello");
         EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
-                                            EnumCharValidationState.EXACT_MATCH,
-                                            EnumCharValidationState.EXACT_MATCH,
-                                            EnumCharValidationState.EXACT_MATCH,
-                                            EnumCharValidationState.EXACT_MATCH};
-        assertArrayEquals(expected, results);
+                EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.EXACT_MATCH};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
     }
 
     @Test
     public void testExactMatchLetter() {
-        EnumCharValidationState[] results = WordValidator.getValidationResults("hello", "hffff");
+        WordAttempt results = WordValidator.getValidationResults("hello", "hffff");
         EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
-                                            EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.NOT_IN_WORD};
-        assertArrayEquals(expected, results);
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
     }
 
     @Test
     public void testMatchLetterInWord() {
-        EnumCharValidationState[] results = WordValidator.getValidationResults("hello", "ffffh");
+        WordAttempt results = WordValidator.getValidationResults("hello", "ffffh");
         EnumCharValidationState[] expected = {EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.NOT_IN_WORD,
-                                            EnumCharValidationState.IN_WORD};
-        assertArrayEquals(expected, results);
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.IN_WORD};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
     }
 
 

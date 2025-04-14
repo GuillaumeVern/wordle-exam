@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class WordleGameTest {
@@ -12,13 +13,13 @@ public class WordleGameTest {
 
     @BeforeEach
     public void setUp() {
-        BufferedReader mockedBufferedReader = org.mockito.Mockito.mock(BufferedReader.class);
+        BufferedReader mockedBufferedReader = mock(BufferedReader.class);
         try {
             when(mockedBufferedReader.readLine()).thenReturn("valid");
         } catch (IOException e) {
             System.out.println("Error reading input in Unit Test");
         }
-        wordleGame = new WordleGameImpl(mockedBufferedReader);
+        wordleGame = new WordleGameImpl(mockedBufferedReader, mock(PrettyPrinterImpl.class));
     }
 
     // the user should be able to set a guess through the console
