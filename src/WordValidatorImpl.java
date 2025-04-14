@@ -39,23 +39,10 @@ public class WordValidatorImpl implements WordValidator {
             }
         }
 
-        for (int i = 0; i < wordCharArray.length; i++) {
-            if (word.contains(String.valueOf(guessCharArray[i]))) {
-                occurences = 0;
-                for (char c : wordCharArray) {
-                    if (c == guessCharArray[i]) {
-                        occurences++;
-                    }
-                }
-                occurencesFound = 0;
-                for (int j = 0; j < wordAttempt.getValidationResults().length; j++) {
-                    if (wordAttempt.getValidationResults()[j] == EnumCharValidationState.EXACT_MATCH) {
-                        occurencesFound++;
-                    }
-                }
-                if (occurencesFound < occurences) {
-                    wordAttempt.setValidationResultAt(i, EnumCharValidationState.IN_WORD);
-                }
+        for (int i = 0; i < guessCharArray.length; i++) {
+            if (word.contains(String.valueOf(guessCharArray[i])) &&
+                    wordAttempt.getValidationResults()[i] != EnumCharValidationState.EXACT_MATCH) {
+                wordAttempt.setValidationResultAt(i, EnumCharValidationState.IN_WORD);
             }
         }
 

@@ -107,7 +107,7 @@ public class WordValidatorTest {
                 EnumCharValidationState.NOT_IN_WORD,
                 EnumCharValidationState.NOT_IN_WORD,
                 EnumCharValidationState.NOT_IN_WORD,
-                EnumCharValidationState.NOT_IN_WORD};
+                EnumCharValidationState.IN_WORD};
         WordAttempt wordAttempt = new WordAttemptImpl();
         wordAttempt.setValidationResults(expected);
         assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
@@ -118,7 +118,7 @@ public class WordValidatorTest {
         WordAttempt results = validator.getValidationResults("hello", "hfofo");
         EnumCharValidationState[] expected = {EnumCharValidationState.EXACT_MATCH,
                 EnumCharValidationState.NOT_IN_WORD,
-                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.IN_WORD,
                 EnumCharValidationState.NOT_IN_WORD,
                 EnumCharValidationState.EXACT_MATCH};
         WordAttempt wordAttempt = new WordAttemptImpl();
@@ -134,6 +134,19 @@ public class WordValidatorTest {
                 EnumCharValidationState.IN_WORD,
                 EnumCharValidationState.NOT_IN_WORD,
                 EnumCharValidationState.IN_WORD};
+        WordAttempt wordAttempt = new WordAttemptImpl();
+        wordAttempt.setValidationResults(expected);
+        assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
+    }
+
+    @Test
+    public void testMatchRoast() {
+        WordAttempt results = validator.getValidationResults("worst", "roast");
+        EnumCharValidationState[] expected = {EnumCharValidationState.IN_WORD,
+                EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.NOT_IN_WORD,
+                EnumCharValidationState.EXACT_MATCH,
+                EnumCharValidationState.EXACT_MATCH};
         WordAttempt wordAttempt = new WordAttemptImpl();
         wordAttempt.setValidationResults(expected);
         assertArrayEquals(wordAttempt.getValidationResults(), results.getValidationResults());
