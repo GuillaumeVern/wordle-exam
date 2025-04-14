@@ -12,15 +12,19 @@ public class WordleGameImpl implements WordleGame {
     private BufferedReader reader;
     private int hardLimitMaxAttempts = 50;
     private int maxAttempts = 5;
+    private int remainingAttempts = maxAttempts;
     private int validAttempts = 0;
     private int attempts = 0;
-    private boolean gameEnded = false;
+    private boolean turnEnded = false;
     private boolean gameWon = false;
     private String wordOfTheDay;
     private WordsDictionary wordsDictionary;
     private WordAttempt validationResults;
     private ArrayList<WordAttempt> previousValidationsResults;
     private PrettyPrinter prettyPrinter;
+    private WordValidator wordValidator;
+    private GameStatisticsTracker gameStatisticsTracker;
+    private boolean quit = false;
 
 
     // contexte par défaut, input par la console
@@ -28,31 +32,47 @@ public class WordleGameImpl implements WordleGame {
         this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl(), new PrettyPrinterImpl());
     }
 
+    public WordleGameImpl(GameStatisticsTracker gameStatisticsTracker) {
+        this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl(), new PrettyPrinterImpl(), gameStatisticsTracker);
+    }
+
     public WordleGameImpl(BufferedReader reader, WordsDictionary wordsDictionary, PrettyPrinter prettyPrinter) {
+        this(reader, wordsDictionary, prettyPrinter, new GameStatisticsTrackerImpl());
+    }
+
+    public WordleGameImpl(BufferedReader reader, WordsDictionary wordsDictionary, PrettyPrinter prettyPrinter, GameStatisticsTracker gameStatisticsTracker) {
         this.reader = reader;
         this.wordsDictionary = wordsDictionary;
         this.wordOfTheDay = wordsDictionary.getWordOfTheDay();
         this.prettyPrinter = prettyPrinter;
         this.previousValidationsResults = new ArrayList<>();
+        this.wordValidator = new WordValidatorImpl();
+        this.gameStatisticsTracker = gameStatisticsTracker;
     }
 
     public void start() {
+
         prettyPrinter.startGame();
-        checkGameEnded();
-
-
-        while (!gameEnded) {
+        checkTurnEnded();
+        while (!turnEnded && !quit) {
             playTurn();
             attempts++;
-            checkGameEnded();
+            checkTurnEnded();
         }
 
 
+        if (quit) {
+            prettyPrinter.printStatistics(gameStatisticsTracker);
+            return;
+        }
         if (gameWon) {
             prettyPrinter.endGameWon();
+            gameStatisticsTracker.win();
         } else {
             prettyPrinter.endGameLost();
+            gameStatisticsTracker.loss();
         }
+        prettyPrinter.printStatistics(gameStatisticsTracker);
     }
 
     public String getUserInputFromConsole() {
@@ -68,36 +88,44 @@ public class WordleGameImpl implements WordleGame {
     private void playTurn() {
         prettyPrinter.askForUserInput();
         setUserGuess(getUserInputFromConsole());
-        if(checkUserGuessIsValid()) {
-            // only increment attempts if the guess is valid
-            validAttempts++;
-            validationResults = WordValidator.getValidationResults(wordOfTheDay, userGuess);
-            System.out.println("previous attempts:");
-            prettyPrinter.allWordsResult(previousValidationsResults);
-            // TODO: remove wod display
-            System.out.println(wordOfTheDay);
-            prettyPrinter.wordResult(validationResults);
-            previousValidationsResults.add(validationResults);
-
-            checkGameWon();
+        switch (userGuess) {
+            case "q":
+                quit = true;
+                return;
+            case "help":
+                System.out.println(wordOfTheDay);
+                break;
+            default:
+                if(checkUserGuessIsValid()) {
+                    // only increment attempts if the guess is valid
+                    validAttempts++;
+                    gameStatisticsTracker.attempt();
+                    validationResults = wordValidator.getValidationResults(wordOfTheDay, userGuess);
+                    previousValidationsResults.add(validationResults);
+                    prettyPrinter.previousAttempts(previousValidationsResults);
+                    prettyPrinter.remainingAttempts(maxAttempts - validAttempts);
+                    checkGameWon();
+                }
+                break;
         }
+
     }
 
     private void checkGameWon() {
         if (wordOfTheDay.equals(userGuess)) {
             gameWon = true;
-            gameEnded = true;
+            turnEnded = true;
         }
     }
 
-    private void checkGameEnded() {
+    private void checkTurnEnded() {
         if (validAttempts >= maxAttempts || attempts >= hardLimitMaxAttempts) {
-            gameEnded = true;
+            turnEnded = true;
         }
     }
 
     private boolean checkUserGuessIsValid() {
-        return WordValidator.isValid(userGuess);
+        return wordValidator.isValid(userGuess);
     }
 
 }

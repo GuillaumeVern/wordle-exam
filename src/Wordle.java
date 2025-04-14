@@ -2,9 +2,14 @@
 public class Wordle {
 
 
+
     public static void main(String[] args) {
-        WordleGameImpl game = new WordleGameImpl();
-        game.start();
+        GameStatisticsTrackerImpl gameStatisticsTracker = new GameStatisticsTrackerImpl();
+        WordleGameImpl game = new WordleGameImpl(gameStatisticsTracker);
+        while(!game.isQuit()) {
+            game = new WordleGameImpl(gameStatisticsTracker);
+            game.start();
+        }
     }
 
 

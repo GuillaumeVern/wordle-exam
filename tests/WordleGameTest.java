@@ -24,6 +24,12 @@ public class WordleGameTest {
         wordleGame = new WordleGameImpl(mockedBufferedReader, mockedWordsDictionary, mock(PrettyPrinterImpl.class));
     }
 
+    @Test
+    public void noArgsConstructorTest() {
+        WordleGame wordleGame1  = new WordleGameImpl();
+        assertNotNull(wordleGame1);
+    }
+
     // the user should be able to set a guess through the console
     @Test
     public void testUserGuessInput() {
@@ -36,7 +42,7 @@ public class WordleGameTest {
     public void testGameEndedIfMaxAttemptsReached(){
         wordleGame.start();
 
-        assertTrue(wordleGame.isGameEnded());
+        assertTrue(wordleGame.isTurnEnded());
     }
 
 

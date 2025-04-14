@@ -3,61 +3,9 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 public interface WordValidator {
-    ArrayList<Function<String, Boolean>> validators = new ArrayList<>(Arrays.asList(WordValidator::isNotNull, WordValidator::isExactlyFiveCharacters, WordValidator::isOnlyLetters));
 
-    static boolean isValid(String word) {
-        boolean valid = true;
-        for (Function<String, Boolean> validator : validators) {
-            if (!validator.apply(word)) {
-                valid = false;
-                break;
-            }
-        }
-        return valid;
-    }
+    boolean isValid(String word);
 
-    static WordAttempt getValidationResults(String word, String guess) {
-        WordAttempt wordAttempt = new WordAttemptImpl(guess);
-        char[] wordCharArray = word.toCharArray();
-        char[] guessCharArray = guess.toCharArray();
+    WordAttempt getValidationResults(String word, String guess);
 
-        for (int i = 0; i < wordCharArray.length; i++) {
-            if (wordCharArray[i] == guessCharArray[i]) {
-                wordAttempt.setValidationResultAt(i, EnumCharValidationState.EXACT_MATCH);
-            } else if (word.contains(String.valueOf(guessCharArray[i]))) {
-                wordAttempt.setValidationResultAt(i, EnumCharValidationState.IN_WORD);
-            } else {
-                wordAttempt.setValidationResultAt(i, EnumCharValidationState.NOT_IN_WORD);
-            }
-        }
-
-        return wordAttempt;
-    }
-
-    private static boolean isNotNull(String word) {
-        boolean valid = true;
-        if (word == null) {
-            valid = false;
-            System.out.println("Word must not be null, please enter a valid word.");
-        }
-        return valid;
-    }
-
-    private static boolean isExactlyFiveCharacters(String word) {
-        boolean valid = true;
-        if (word.length() != 5) {
-            valid = false;
-            System.out.println("Word must be exactly 5 letters long, please enter a valid word.");
-        }
-        return valid;
-    }
-
-    private static boolean isOnlyLetters(String word) {
-        boolean valid = true;
-        if (!word.matches("[a-zA-Z]+")) {
-            valid = false;
-            System.out.println("Word must contain only letters, please enter a valid word.");
-        }
-        return valid;
-    }
 }

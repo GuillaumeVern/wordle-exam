@@ -14,7 +14,7 @@ public class WordleAttemptTest {
                         EnumCharValidationState.EXACT_MATCH,
                         EnumCharValidationState.EXACT_MATCH,
                         EnumCharValidationState.EXACT_MATCH});
-        String expected = "\u001B[32mV\u001B[32mA\u001B[32mL\u001B[32mI\u001B[32mD\u001B[0m";
+        String expected = "\u001B[0m\u001B[1m\u001B[30m\u001B[102mV\u001B[0m\u001B[1m\u001B[30m\u001B[102mA\u001B[0m\u001B[1m\u001B[30m\u001B[102mL\u001B[0m\u001B[1m\u001B[30m\u001B[102mI\u001B[0m\u001B[1m\u001B[30m\u001B[102mD\u001B[0m";
         String actual = wordAttempt.toString();
 
         assertEquals(expected, actual);

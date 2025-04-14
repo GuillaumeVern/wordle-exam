@@ -23,6 +23,8 @@ public class PrettyPrinterTest {
         String expected = """
                 -------------------------
                  Welcome to Wordle Game!
+                     Type q to quit
+                  help to get the answer
                 -------------------------
                 
                 """;
@@ -93,7 +95,7 @@ public class PrettyPrinterTest {
         prettyPrinter.wordResult(wordAttemptMock);
 
         String expected = """
-                valid
+                        valid
                 """;
 
         assertEquals(expected, outContent.toString().replace("\r",""));
@@ -124,8 +126,8 @@ public class PrettyPrinterTest {
         prettyPrinter.allWordsResult(previousWordsResults);
 
         String expected = """
-                valid
-                valid
+                        valid
+                        valid
                 
                 """;
 
@@ -154,7 +156,7 @@ public class PrettyPrinterTest {
         prettyPrinter.printErrorMessage("expected");
 
         String expected = """
-                expected
+                \u001B[31mexpected\u001B[0m
                 """;
 
         assertEquals(expected, outContent.toString().replace("\r",""));
