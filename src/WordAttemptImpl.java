@@ -1,3 +1,4 @@
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -5,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class WordAttemptImpl implements WordAttempt {
     private String word;
     private EnumCharValidationState[] validationResults;
@@ -22,9 +24,9 @@ public class WordAttemptImpl implements WordAttempt {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < word.length(); i++) {
             result.append(validationResults[i].getSymbol());
-            result.append(word.charAt(i));
-            result.append("\u001B[0m");
+            result.append(Character.toUpperCase(word.charAt(i)));
         }
+        result.append("\u001B[0m");
         return result.toString();
     }
 

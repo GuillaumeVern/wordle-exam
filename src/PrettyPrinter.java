@@ -8,5 +8,4 @@ public interface PrettyPrinter {
     void wordResult(WordAttempt lastWordResult);
     void allWordsResult(ArrayList<WordAttempt> previousWordsResults);
     void printErrorMessage(String message);
-    void clear();
 }

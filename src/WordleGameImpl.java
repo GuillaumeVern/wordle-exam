@@ -28,23 +28,6 @@ public class WordleGameImpl implements WordleGame {
         this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl(), new PrettyPrinterImpl());
     }
 
-    // contexte de test, injection d'un BufferedReader mocké
-    public WordleGameImpl(BufferedReader reader) {
-        this(reader, new WordsDictionaryImpl(), new PrettyPrinterImpl());
-    }
-
-    public WordleGameImpl(WordsDictionary wordsDictionary) {
-        this(new BufferedReader(new InputStreamReader(System.in)), wordsDictionary, new PrettyPrinterImpl());
-    }
-
-    public WordleGameImpl(PrettyPrinter prettyPrinter) {
-        this(new BufferedReader(new InputStreamReader(System.in)), new WordsDictionaryImpl(), prettyPrinter);
-    }
-
-    public WordleGameImpl(BufferedReader reader, PrettyPrinter prettyPrinter) {
-        this(reader, new WordsDictionaryImpl(), prettyPrinter);
-    }
-
     public WordleGameImpl(BufferedReader reader, WordsDictionary wordsDictionary, PrettyPrinter prettyPrinter) {
         this.reader = reader;
         this.wordsDictionary = wordsDictionary;
@@ -85,7 +68,6 @@ public class WordleGameImpl implements WordleGame {
     private void playTurn() {
         prettyPrinter.askForUserInput();
         setUserGuess(getUserInputFromConsole());
-        prettyPrinter.clear();
         if(checkUserGuessIsValid()) {
             // only increment attempts if the guess is valid
             validAttempts++;

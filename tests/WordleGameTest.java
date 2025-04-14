@@ -14,12 +14,14 @@ public class WordleGameTest {
     @BeforeEach
     public void setUp() {
         BufferedReader mockedBufferedReader = mock(BufferedReader.class);
+        WordsDictionary mockedWordsDictionary = mock(WordsDictionary.class);
+        when(mockedWordsDictionary.getWordOfTheDay()).thenReturn("mockd");
         try {
             when(mockedBufferedReader.readLine()).thenReturn("valid");
         } catch (IOException e) {
             System.out.println("Error reading input in Unit Test");
         }
-        wordleGame = new WordleGameImpl(mockedBufferedReader, mock(PrettyPrinterImpl.class));
+        wordleGame = new WordleGameImpl(mockedBufferedReader, mockedWordsDictionary, mock(PrettyPrinterImpl.class));
     }
 
     // the user should be able to set a guess through the console

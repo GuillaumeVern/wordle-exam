@@ -11,7 +11,6 @@ public class PrettyPrinterImpl implements PrettyPrinter {
     }
 
     public void endGameWon() {
-        clear();
         System.out.println("""
                 -------------------------
                 Congratulations! You won!
@@ -20,7 +19,6 @@ public class PrettyPrinterImpl implements PrettyPrinter {
     }
 
     public void endGameLost() {
-        clear();
         System.out.println("""
                 -------------------------
                   Game Over! You lost!
@@ -58,9 +56,4 @@ public class PrettyPrinterImpl implements PrettyPrinter {
         System.out.println(message);
     }
 
-    public void clear() {
-        System.out.println("""
-                
-                """.repeat(50));
-    }
 }
